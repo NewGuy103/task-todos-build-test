@@ -1,0 +1,22 @@
+[project]
+name = "task-todos"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "platformdirs>=4.3.8",
+    "pydantic>=2.11.7",
+    "pydantic-settings>=2.10.1",
+    "pyside6>=6.9.1",
+]
+
+[dependency-groups]
+build = [
+    "pip>=25.1.1",
+]
+dev = [
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.6.15",
+    "pyinstaller>=6.14.2",
+]

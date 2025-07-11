@@ -1,0 +1,44 @@
+name: Build & Release PySide6 App
+
+on:
+  push:
+    tags:
+      - 'v*'  # Triggers only on version tags like v1.0.0
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+    
+      - name: Install uv
+        uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86
+
+      - name: Set up Python versions
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.13
+    
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Build binary with PyInstaller
+        run: uv run pyinstaller --onefile --windowed run.py
+
+      - name: Rename binary for platform
+        run: uv run python scripts/build-post-generate.py
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist_out/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
